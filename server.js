@@ -1,5 +1,5 @@
 const express = require('express')
-
+const mongoose = require('mongoose')
 const app = express()
 
 app.use(
@@ -7,9 +7,14 @@ app.use(
     extended: true
   }),
 )
-
 app.use(express.json())
 
-app.listen(3333, () => {
-  console.log('Server running')
+const userRoute = require('./routes/userRoute')
+app.use('/user', userRoute)
+
+mongoose.connect('mongodb+srv://chagas:dani@apicluster.jgmdiig.mongodb.net/bancodaapi?retryWrites=true&w=majority&appName=APICluster')
+.then(() => {
+  console.log('MongoDB Conectado')
+  app.listen(3333)
 })
+.catch((err) => console.log(err))
