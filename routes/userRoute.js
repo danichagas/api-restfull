@@ -8,6 +8,7 @@ router.post('/', async (req, res) => {
 
   if(!name) {
     res.status(422).json({ error: 'O nome é obrigatório!' })
+    return
   }
 
   const user = {
@@ -23,9 +24,7 @@ router.post('/', async (req, res) => {
     res.status(201).json({ message: 'Cadastrado criado!'})
 
   } catch(error) {
-
     res.status(500).json({ error: error })
-
   }
 })
 
@@ -38,11 +37,29 @@ router.get('/', async (req, res) => {
     res.status(200).json(users)
 
   } catch(error) {
-
     res.status(500).json({ error: error })
-
   }
 
+})
+
+router.get('/:id', async (req, res) => {
+
+  const id = req.params.id
+
+  try {
+
+    const user = await User.findById(id)
+
+    if(!user) {
+      res.status(422).json({ message: 'Usuário não encontrado!' })
+      return
+    }
+
+    res.status(200).json(user)
+
+  } catch(error) {
+    res.status(500).json({ error: error })
+  }
 })
 
 module.exports = router
